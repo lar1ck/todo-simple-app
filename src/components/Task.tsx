@@ -23,9 +23,8 @@ const Task = (Props: TasksProps) => {
     })
 
     return (
-        <div className="p-2 font-sans flex gap-4">
+        <div className="p-2 font-sans ">
             <div
-                // style={{ backgroundColor: `${Props.bgColor}` }}
                 className={
                     clsx(
                         "p-1  mt-10 w-[350px] rounded-sm hover:scale-[101%] duration-200 transform ",
