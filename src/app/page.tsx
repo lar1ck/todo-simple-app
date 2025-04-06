@@ -36,7 +36,7 @@ export default function Home() {
     const updatedTasks = [...tasks, task];
     setTasks(updatedTasks);
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   const handleDeleteTask = (taskName: string) => {
@@ -45,13 +45,19 @@ export default function Home() {
     localStorage.setItem('tasks', JSON.stringify(updatedTasks));
   };
 
+
+  const handleClearAllTasks = () => {
+    localStorage.removeItem('tasks');
+    setTasks([]);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dialogRef.current && !dialogRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     };
-    
+
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -64,6 +70,7 @@ export default function Home() {
       >
         <button
           className="bg-red-700 rounded-md p-1 items-center text-gray-100 flex hover:scale-105 hover:cursor-pointer transform duration-200 ml-4"
+          onClick={handleClearAllTasks}
         >
           <OctagonMinus size={20} strokeWidth={4} />
         </button>
@@ -73,17 +80,23 @@ export default function Home() {
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 pl-16">
-        {tasks.map((task, index) => (
-          <Task
-            key={index}
-            TaskName={task.TaskName}
-            taskDescription={task.taskDescription}
-            bgColor={task.bgColor}
-            tasktype={task.tasktype}
-            taskTime={task.time}
-            onDelete={handleDeleteTask} 
-          />
-        ))}
+        {tasks.length === 0 ? (
+          <div className="col-span-full text-center text-gray-500">
+            No tasks available
+          </div>
+        ) : (
+          tasks.map((task, index) => (
+            <Task
+              key={index}
+              TaskName={task.TaskName}
+              taskDescription={task.taskDescription}
+              bgColor={task.bgColor}
+              tasktype={task.tasktype}
+              taskTime={task.time}
+              onDelete={handleDeleteTask}
+            />
+          ))
+        )}
       </div>
 
       {isOpen && (
