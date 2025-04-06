@@ -10,7 +10,8 @@ interface TasksProps {
   taskDescription: string;
   tasktype: string;
   taskTime: string;
-  onDelete: (taskName: string) => void; 
+  onDelete: (taskName: string) => void;
+  onEdit: (taskName: string) => void;
 }
 
 const Task = (Props: TasksProps) => {
@@ -18,9 +19,9 @@ const Task = (Props: TasksProps) => {
     'bg-blue-200': Props.bgColor === 'blue',
     'bg-red-200': Props.bgColor === 'red',
     'bg-green-200': Props.bgColor === 'green',
-    'bg-purple-200': Props.bgColor === 'purple',
+    'bg-purple-300': Props.bgColor === 'purple',
     'bg-yellow-200': Props.bgColor === 'yellow',
-    'bg-gray-100': Props.bgColor === 'gray',
+    'bg-gray-300': Props.bgColor === 'gray',
   });
 
   return (
@@ -38,7 +39,9 @@ const Task = (Props: TasksProps) => {
           <div className="ml-3 font-bold text-lg">{Props.taskTime}</div>
 
           <div className="flex px-3 py-1 gap-4 text-gray-600">
-            <button onClick={() => alert('Editing')} className="hover:cursor-pointer hover:text-blue-500 duration-200">
+            <button 
+            onClick={() => Props.onEdit(Props.TaskName)} 
+            className="hover:cursor-pointer hover:text-blue-500 duration-200">
               <Pencil />
             </button>
 
@@ -46,7 +49,7 @@ const Task = (Props: TasksProps) => {
               onClick={() => Props.onDelete(Props.TaskName)}
             >
               <Trash2 className="hover:cursor-pointer hover:text-[#FF0000] duration-200" />
-            </button>
+            </button>   
           </div>
         </div>
       </div>

@@ -1,85 +1,98 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-interface AddTaskDialogProps {
-  onAddTask: (task: { TaskName: string; taskDescription: string; tasktype: string; bgColor: string; time: string }) => void;
+interface TasksProps {
+    bgColor: string;
+    TaskName: string;
+    taskDescription: string;
+    tasktype: string;
+    time: string;
 }
 
-const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
-  const [taskName, setTaskName] = useState('');
-  const [description, setDescription] = useState('');
-  const [type, setType] = useState('');
-  const [bgColor, setBgColor] = useState('blue');
-  const [time, setTime] = useState('');
+interface AddTaskDialogProps {
+    onAddTask: (task: TasksProps) => void;
+    initialData?: TasksProps | null;
+}
 
-  const handleAddTask = () => {
-    if (!taskName) return;
+export default function AddTaskDialog({ onAddTask, initialData }: AddTaskDialogProps) {
+    const [formData, setFormData] = useState<TasksProps>({
+        TaskName: '',
+        taskDescription: '',
+        bgColor: 'gray',
+        tasktype: '',
+        time: '',
+    });
 
-    const task = {
-      TaskName: taskName,
-      taskDescription: description,
-      tasktype: type,
-      bgColor,
-      time,
+    useEffect(() => {
+        if (initialData) {
+            setFormData(initialData);
+        }
+    }, [initialData]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+    const handleSubmit = () => {
+        if (formData.TaskName.trim()) {
+            onAddTask(formData);
+        }
     };
 
-    onAddTask(task);
-
-    setTaskName('');
-    setDescription('');
-    setType('');
-    setBgColor('blue');
-    setTime('');
-  };
-
-  return (
-    <div className="p-4 bg-gray-100  border-0 rounded-md w-[500px]">
-      <input
-        className="border-0 border-b-2 bg-gray-50 p-1 mb-2 w-full outline-none"
-        placeholder="Task Name"
-        value={taskName}
-        onChange={(e) => setTaskName(e.target.value)}
-      />
-      <textarea
-        className="border-0 border-b-2 bg-gray-50 p-1 mb-2 w-full outline-none"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <input
-        className="border-0 border-b-2 bg-gray-50 p-1 mb-2 w-full outline-none"
-        placeholder="Type"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-      />
-      <select
-        className="border-0 border-b-2 bg-gray-50 p-1 mb-2 w-full outline-none"
-        value={bgColor}
-        onChange={(e) => setBgColor(e.target.value)}
-      >
-        <option value="blue">Blue</option>
-        <option value="red">Red</option>
-        <option value="green">Green</option>
-        <option value="yellow">Yellow</option>
-        <option value="purple">Purple</option>
-      </select>
-
-      <input
-        type="time"
-        className="border-0 border-b-2 bg-gray-50 p-1 mb-2 w-full outline-none"
-        value={time}
-        onChange={(e) => setTime(e.target.value)}
-      />
-
-      <button
-        className="bg-blue-800 text-white mt-2 px-3 py-1 rounded-md hover:cursor-pointer "
-        onClick={handleAddTask}
-      >
-        Add Task
-      </button>
-    </div>
-  );
-};
-
-export default AddTaskDialog;
+    return (
+        <div className="flex flex-col gap-3 py-3">
+            <input
+                name="TaskName"
+                placeholder="Task Name"
+                value={formData.TaskName}
+                onChange={handleChange}
+                className="p-2 border-0 border-b-1 border-gray-400 bg-gray-50 outline-none"
+            />
+            <textarea
+                name="taskDescription"
+                placeholder="Description"
+                value={formData.taskDescription}
+                onChange={handleChange}
+                className="p-2 border-0 border-b-1 border-gray-400 bg-gray-50 outline-none"
+                rows={3}
+            />
+            <input
+                name="tasktype"
+                placeholder="Type"
+                value={formData.tasktype}
+                onChange={handleChange}
+                className="p-2 border-0 border-b-1 border-gray-400 bg-gray-50 outline-none"
+            />
+            <input
+                type="time"
+                name="time"
+                value={formData.time}
+                onChange={handleChange}
+                className="p-2 border-0 border-b-1 border-gray-400 bg-gray-50 outline-none" />
+            <select
+                name="bgColor"
+                value={formData.bgColor}
+                onChange={handleChange}
+                className="p-2 border-0 border-b-1 border-gray-400 bg-gray-50 outline-none"            >
+                <option value="gray">Gray</option>
+                <option value="blue">Blue</option>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="purple">Purple</option>
+                <option value="yellow">Yellow</option>
+            </select>
+            <button
+                onClick={handleSubmit}
+                className=" text-white rounded p-1 mt-2 justify-end flex "
+            >
+                <p className='bg-blue-900 px-3 py-1 rounded'>
+                {initialData ? 'Update Task' : 'Add Task'}
+                </p>
+            </button>
+        </div>
+    );
+}
