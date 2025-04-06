@@ -2,10 +2,13 @@
 
 import { Trash2 } from 'lucide-react';
 import { Pencil } from 'lucide-react';
+import { useState } from 'react';
 
 const Task = () => {
+    const [isOpen,setIsOpen] = useState(false);
+
     return (
-        <div className="p-2 font-sans flex gap-4">
+        <div className="p-2 font-sans flex ">
             <div className="p-1 bg-blue-200 mt-10 w-[350px] rounded-sm hover:scale-[101%] duration-200 transform ">
                 <div className="mt-4 text-center font-bold ">
                     Doing my homework
@@ -22,7 +25,7 @@ const Task = () => {
                     </div>
 
                     <div className='flex  px-3 py-1 gap-4 text-gray-600'>
-                        <button onClick={() => alert("Editing")} className='hover:cursor-pointer hover:text-blue-500 duration-200'>
+                        <button onClick={() => setIsOpen(prev => !prev)} className='hover:cursor-pointer hover:text-blue-500 duration-200'>
                             <Pencil />
                         </button>
 
@@ -32,6 +35,10 @@ const Task = () => {
                     </div>
                 </div>
             </div>
+            {isOpen && (
+                <div className='fixed shadow-xl top-1/3 left-1/2 bg-white w-[300px] px-5 py-2 -translate-x-1/2 border border-gray-600 rounded-sm z-50'>
+                </div>
+            )}
         </div>
     )
 }
